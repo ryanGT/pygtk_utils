@@ -9,6 +9,13 @@ import gtk
 class listbox(gtk.TreeView):
     """This is my attempt to package a ListStore, TreeView, and
     TreeSelection together into a functioning listbox."""
+    def append(self, items):
+        if type(items) == str:
+            items = [items]
+        for item in items:
+            self.liststore.append(['%s' % item])
+            
+
     def get_selected(self):
         model, rows = self.treeselection.get_selected_rows()
         selected = []
@@ -33,6 +40,11 @@ class listbox(gtk.TreeView):
     def clear(self, *args, **kwargs):
         self.liststore.clear()
 
+
+    def set_items(self, items):
+        self.clear()
+        self.append(items)
+        
     
     def __init__(self, label='Column A', initial_data=None):
         self.liststore = gtk.ListStore(str)
