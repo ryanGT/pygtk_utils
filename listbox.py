@@ -28,11 +28,11 @@ class listbox(gtk.TreeView):
     
 
     def selection_changed(self, *args, **kwargs):
-        print('I believe you changed the selection')
+        #print('I believe you changed the selection')
         model, rows = self.treeselection.get_selected_rows()
         #iter_list = self.treeselection.get_selected()
-        print('model = ' + str(model))
-        print('rows = ' + str(rows))
+        #print('model = ' + str(model))
+        #print('rows = ' + str(rows))
         items = self.get_selected()
         print('selected items = ' + str(items))
 
