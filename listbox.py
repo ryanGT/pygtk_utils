@@ -85,6 +85,14 @@ class listbox(gtk.TreeView):
         self.treeselection.connect("changed", self.selection_changed)
     
 
+
+class listbox_on_scrollwindow(gtk.ScrolledWindow):
+    """This class put a listbox on a scrolledwindow in case the list
+    contents overflow the available space"""
+    def __init__(self, *args, **kwargs):
+        raise NotImplementedError
+    
+    
 class listbox_example:
     # close the window and quit
     def delete_event(self, widget, event, data=None):
