@@ -83,15 +83,36 @@ class listbox(gtk.TreeView):
         self.treeselection = self.get_selection()
         self.treeselection.set_mode(gtk.SELECTION_MULTIPLE)
         self.treeselection.connect("changed", self.selection_changed)
-    
+
+map_list = ['set_items', \
+            'clear', \
+            'get_selected', \
+            'append']
+            
 
 
 class listbox_on_scrollwindow(gtk.ScrolledWindow):
     """This class put a listbox on a scrolledwindow in case the list
     contents overflow the available space"""
     def __init__(self, *args, **kwargs):
-        raise NotImplementedError
-    
+        gtk.ScrolledWindow.__init__(self)
+        self.set_shadow_type(gtk.SHADOW_NONE)
+        self.set_border_width(0)
+        self.listbox = listbox(*args, **kwargs)
+
+        self.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        #self.add_with_viewport(self.listbox)
+        gtk.Container.add(self, self.listbox)
+        self.listbox.show()
+
+        for attr in map_list:
+            myfunc = getattr(self.listbox, attr)
+            setattr(self, attr, myfunc)
+
+
+    ## def set_items(self, *arg, **kwargs):
+    ##     self.listbox.set_items(*args, **kwargs)
+        
     
 class listbox_example:
     # close the window and quit
