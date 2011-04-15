@@ -23,6 +23,12 @@ class listbox(gtk.TreeView):
             myiter = self.liststore.get_iter(path)
             item  = self.liststore.get_value(myiter, 0)
             selected.append(item)
+        if self.dtype == int:
+            outfloats = [float(item) for item in selected]
+            selected = [int(item) for item in outfloats]
+        elif self.dtype == float:
+            selected = [float(item) for item in selected]
+
         self.selected = selected
         return selected
     
@@ -37,6 +43,15 @@ class listbox(gtk.TreeView):
         print('selected items = ' + str(items))
 
 
+    def clear_selected(self, *args, **kwargs):
+        model, rows = self.treeselection.get_selected_rows()
+        for path in rows:
+            self.treeselection.unselect_path(path)
+            ## myiter = self.liststore.get_iter(path)
+            ## item  = self.liststore.get_value(myiter, 0)
+
+
+
     def clear(self, *args, **kwargs):
         self.liststore.clear()
 
@@ -46,8 +61,10 @@ class listbox(gtk.TreeView):
         self.append(items)
         
     
-    def __init__(self, label='Column A', initial_data=None):
+    def __init__(self, label='Column A', initial_data=None, \
+                 dtype=str):
         self.liststore = gtk.ListStore(str)
+        self.dtype = dtype
 
         if initial_data is not None:
             for item in initial_data:
@@ -87,7 +104,8 @@ class listbox(gtk.TreeView):
 map_list = ['set_items', \
             'clear', \
             'get_selected', \
-            'append']
+            'append', \
+            'clear_selected']
             
 
 
