@@ -12,6 +12,8 @@ import copy, pdb
 
 class thumbnail_iconview(gtk.IconView, listbox.listbox):
     def select_new_path(self, inc=1):
+        #print('at beginning of select_new_path')
+        #pdb.set_trace()
         items = self.get_selected_items()
         N = len(self.liststore)
         #print('len(self.liststore) = ' + str(N))
@@ -22,11 +24,13 @@ class thumbnail_iconview(gtk.IconView, listbox.listbox):
                 next_ind = N-1
         else:
             prev_path = items[-1]
+            #print('before unselect_path')
+            #self.unselect_path(prev_path)
+            #print('after unselect_path')
             #print('prev_path = ' + str(prev_path))
             prev_ind = prev_path[0]
             next_ind = prev_ind + inc
 
-        self.unselect_all()
         
         if next_ind < 0:
             next_ind = 0
@@ -35,10 +39,13 @@ class thumbnail_iconview(gtk.IconView, listbox.listbox):
         next_path = (next_ind,)#a tuple of one item, since our viewer
                                #only has one column
         #print('next_path = ' + str(next_path))
+        self.unselect_all()        
         self.select_path(next_path)
         self.scroll_to_path(next_path, use_align=True, \
                             row_align=0.5, col_align=0.5)
-        self.selection_changed()
+        #self.selection_changed()#<-- this is redundant, select_path
+                                 #    causes this to be called
+        #print('at end of select_new_path')
         
         
     def select_next(self):
@@ -47,25 +54,36 @@ class thumbnail_iconview(gtk.IconView, listbox.listbox):
 
     def select_previous(self):
         self.select_new_path(inc=-1)
+
+
+    def get_selected_inds(self):
+        items = self.get_selected_items()
+        selected_inds = []
+        for path in items:
+            ind = path[0]
+            #print('ind = ' + str(ind))
+            selected_inds.append(ind)
+        self.selected_inds = selected_inds
+        return selected_inds
         
         
     def get_selections(self):
-        items = self.get_selected_items()
+        inds = self.get_selected_inds()
+        #print('inds = ' + str(inds))
         selected = []
-        for path in items:
-            ind = path[0]
-            print('ind = ' + str(ind))
+        for ind in inds:
             thumb_path = self.thumb_paths[ind]
-            myiter = self.liststore.get_iter(path)
+            myiter = self.liststore.get_iter(ind)
             item  = self.liststore.get_value(myiter, 0)
             selected.append(thumb_path)
-            print('thumb_path = ' + str(thumb_path))
+            #print('thumb_path = ' + str(thumb_path))
         self.selected_thumb_paths = selected
         return selected
 
         
     def selection_changed(self, *args, **kwargs):
-        self.get_selections()
+        #print('in selection_changed')
+        #self.get_selections()<-- the parent method calls this
         if self.parent_selection_method is not None:
             self.parent_selection_method()
         
@@ -113,9 +131,10 @@ class thumbnail_iconview(gtk.IconView, listbox.listbox):
 
 map_list = copy.copy(listbox.map_list)
 map_list.extend(['set_from_paths', \
-                'get_selections', \
+                 'get_selections', \
                  'select_next', \
-                 'select_previous'])
+                 'select_previous', \
+                 'get_selected_inds'])
 
 
 class thumbnail_iconview_on_scrollwindow(gtk.ScrolledWindow):
