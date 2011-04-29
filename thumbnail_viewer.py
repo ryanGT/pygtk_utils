@@ -11,11 +11,15 @@ import listbox
 import copy, pdb
 
 class thumbnail_iconview(gtk.IconView, listbox.listbox):
+    def get_N(self):
+        N = len(self.liststore)
+        return N
+        
     def select_new_path(self, inc=1):
         #print('at beginning of select_new_path')
         #pdb.set_trace()
         items = self.get_selected_items()
-        N = len(self.liststore)
+        N = self.get_N()
         #print('len(self.liststore) = ' + str(N))
         if items == []:
             if inc >= 0:
@@ -134,7 +138,8 @@ map_list.extend(['set_from_paths', \
                  'get_selections', \
                  'select_next', \
                  'select_previous', \
-                 'get_selected_inds'])
+                 'get_selected_inds', \
+                 'get_N'])
 
 
 class thumbnail_iconview_on_scrollwindow(gtk.ScrolledWindow):
