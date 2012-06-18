@@ -66,6 +66,16 @@ class listview_on_scrolledwindow(gtk.ScrolledWindow):
         self.treeview.set_search_column(0)
         
 
+    def get_selection(self):
+        model, iter = self.treeview.get_selection().get_selected()
+        data = []
+        #iter = model.get_iter(row)
+        N = model.get_n_columns()
+        bibtex_label = model.get_value(iter, N-1)
+        data.append(bibtex_label)
+
+        return data
+            
     def __init__(self, data, dtype_list, labels, modelclass=gtk.ListStore, \
                  wrap_width=300, wrap=0):
         gtk.ScrolledWindow.__init__(self)
