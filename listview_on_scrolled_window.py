@@ -71,7 +71,7 @@ class listview_on_scrolledwindow(gtk.ScrolledWindow):
         data = []
         #iter = model.get_iter(row)
         N = model.get_n_columns()
-        bibtex_label = model.get_value(iter, N-1)
+        bibtex_label = model.get_value(iter, N-1)#<-- this is hard coded to grab the last entry in the row
         data.append(bibtex_label)
 
         return data
